@@ -1,5 +1,5 @@
 import pandas as pd
-import talib as ta
+# import talib as ta
 
 from finplotter.finplotter import FinPlotter
 
@@ -16,9 +16,9 @@ if __name__ == '__main__':
 
     df = pd.read_csv('examples/data/sample_data.csv', index_col=0)
     df.index = pd.to_datetime(df.index)
-    df['ema20'] = ta.EMA(df['c'], timeperiod=10)
+    # df['ema20'] = ta.EMA(df['c'], timeperiod=10)
 
     plotter = FinPlotter(metadata=metadata, figsize=(1800, 1000))
     plotter.plot_candlestick(data=df[['o', 'h', 'l', 'c', 'v']], with_volume=True) # has to be this name and this order
-    plotter.add_line(data=df['ema20'], color='#F4D03F', width=3, legend='EMA')
+    plotter.add_line(data=df['ema20'], color='#F4D03F', width=3)
     plotter.show()

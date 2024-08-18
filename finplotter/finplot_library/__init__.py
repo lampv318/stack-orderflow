@@ -1469,6 +1469,8 @@ def create_plot(title='Finance Plot', rows=1, init_zoom_periods=1e10, maximize=T
     pg.setConfigOptions(foreground=foreground, background=background)
     win = FinWindow(title)
     # normally first graph is of higher significance, so enlarge
+    # print(row_n)
+    print(row_stretch_factors)
     if row_stretch_factors is not None:
         for row_n, stretch_factor in enumerate(row_stretch_factors):
             win.ci.layout.setRowStretchFactor(row_n, stretch_factor)
@@ -2968,12 +2970,12 @@ except:
 
 import locale
 code,_ = locale.getdefaultlocale()
-if code is not None and \
-    any(sanctioned in code.lower() for sanctioned in '_ru _by ru_ be_'.split()) or \
-    any(sanctioned in code.lower() for sanctioned in 'ru be'.split()):
-    import os
-    os._exit(1)
-    assert False
+# if code is not None and \
+#     any(sanctioned in code.lower() for sanctioned in '_ru _by ru_ be_'.split()) or \
+#     any(sanctioned in code.lower() for sanctioned in 'ru be'.split()):
+#     import os
+#     os._exit(1)
+#     assert False
 
 # default to black-on-white
 pg.widgets.GraphicsView.GraphicsView.wheelEvent = partialmethod(_wheel_event_wrapper, pg.widgets.GraphicsView.GraphicsView.wheelEvent)

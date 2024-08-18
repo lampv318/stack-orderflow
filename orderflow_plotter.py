@@ -49,12 +49,12 @@ class OrderflowPlotter:
         self.ohlcv['d'] = [mp.delta_qty for mp in self.mp_slice]
         self.ohlcv['poc'] = [mp.poc_price_level for mp in self.mp_slice]
 
-        for n in self.ema_n:
-            self.ohlcv[f'ema{n}'] = ta.EMA(self.ohlcv['c'], timeperiod=n)
+        # for n in self.ema_n:
+        #     self.ohlcv[f'ema{n}'] = ta.EMA(self.ohlcv['c'], timeperiod=n)
 
-        self.ohlcv['macd'], self.ohlcv['macd_signal'], self.ohlcv['macd_diff'] = ta.MACD(self.ohlcv['c'], fastperiod=self.macd[0], slowperiod=self.macd[1], signalperiod=self.macd[2])
+        # self.ohlcv['macd'], self.ohlcv['macd_signal'], self.ohlcv['macd_diff'] = ta.MACD(self.ohlcv['c'], fastperiod=self.macd[0], slowperiod=self.macd[1], signalperiod=self.macd[2])
 
-        self.ohlcv['fastk'], self.ohlcv['fastd'] = ta.STOCHRSI(self.ohlcv['c'], timeperiod=self.stoch_rsi[0], fastk_period=self.stoch_rsi[1], fastd_period=self.stoch_rsi[2], fastd_matype=0)
+        # self.ohlcv['fastk'], self.ohlcv['fastd'] = ta.STOCHRSI(self.ohlcv['c'], timeperiod=self.stoch_rsi[0], fastk_period=self.stoch_rsi[1], fastd_period=self.stoch_rsi[2], fastd_matype=0)
 
         '''
         Uncomment this to enable text and heatmap which can be slow
@@ -101,7 +101,9 @@ class OrderflowPlotter:
         # plotting
         ema_colors = ['#33DCCD50', '#ADE03670', '#F4D03F80']
         fplt.foreground = '#D6DBDF'
+        # background color
         fplt.background = '#151E26'
+
         fplt.legend_border_color = '#ffffff30' # make transparent
         fplt.legend_fill_color = '#ffffff10' # make transparent
         fplt.legend_text_color = fplt.foreground
@@ -109,12 +111,13 @@ class OrderflowPlotter:
         # fplt.top_graph_scale = 3 # top graph and bottom graph has ratio of r:1
         fplt.winx, fplt.winy, fplt.winw, fplt.winh = 100,100,1600,1600
 
-        ax, ax5, ax3, ax2, ax4 = fplt.create_plot(
+        ax, ax5 = fplt.create_plot(
             title='StackOrderflow',
-            rows=5, # main candlestick = ax / pace of tape = ax5 / MACD = ax3 / CVD = ax2 / StochRSI = ax4
+            rows=2, # main candlestick = ax / pace of tape = ax5 / MACD = ax3 / CVD = ax2 / StochRSI = ax4
             maximize=False,
             init_zoom_periods=18,
-            row_stretch_factors=[3, 0.3, 1, 1, 1],
+            row_stretch_factors=[3,1],
+            # row_stretch_factors=[3, 0.3, 1, 1, 1],
         )
 
         # placeholder for tick info; updated with fplt.set_time_inspector(func)
@@ -146,8 +149,8 @@ class OrderflowPlotter:
             # fplt.add_line(p0=(t-timedelta(seconds=24), poc), p1=(t+timedelta(seconds=24), poc), color='#008FFF90', width=2, ax=ax)
 
         # plot EMAs
-        for n, color in zip(self.ema_n, ema_colors):
-            self.plots[f'ema{n}'] = fplt.plot(self.ohlcv[f'ema{n}'], ax=ax, legend=f'EMA {n}', color=color)
+        # for n, color in zip(self.ema_n, ema_colors):
+        #     self.plots[f'ema{n}'] = fplt.plot(self.ohlcv[f'ema{n}'], ax=ax, legend=f'EMA {n}', color=color)
 
         # add heatmap
         self.plots['delta_heatmap'] = fplt.delta_heatmap(self.delta_heatmap, filter_limit=0.7, whiteout=0.0, rect_size=1.0)
@@ -205,37 +208,37 @@ class OrderflowPlotter:
 
         # ==============================================================================================
         # plot MACD
-        self.plots['macd_diff'] = fplt.volume_ocv(self.ohlcv[['o', 'c', 'macd_diff']], ax=ax3, candle_width=0.2, colorfunc=fplt.strength_colorfilter)
-        self.plots['macd'] = fplt.plot(self.ohlcv['macd'], ax=ax3, legend=f'MACD ({self.macd[0]}, {self.macd[1]}, {self.macd[2]})')
-        self.plots['macd_signal'] = fplt.plot(self.ohlcv['macd_signal'], ax=ax3, legend='Signal')
+        # self.plots['macd_diff'] = fplt.volume_ocv(self.ohlcv[['o', 'c', 'macd_diff']], ax=ax3, candle_width=0.2, colorfunc=fplt.strength_colorfilter)
+        # self.plots['macd'] = fplt.plot(self.ohlcv['macd'], ax=ax3, legend=f'MACD ({self.macd[0]}, {self.macd[1]}, {self.macd[2]})')
+        # self.plots['macd_signal'] = fplt.plot(self.ohlcv['macd_signal'], ax=ax3, legend='Signal')
 
-        vb = self.plots['macd'].getViewBox()
-        vb.setBackgroundColor('#00000020')
+        # vb = self.plots['macd'].getViewBox()
+        # vb.setBackgroundColor('#00000020')
 
         # ==============================================================================================
         '''
         Ref: examples/snp500.py
         '''
         # plot cvd
-        line_color = '#F4D03F'
-        self.plots['cvd'] = fplt.plot(self.cvd, ax=ax2, legend='CVD', color=line_color, fillLevel=0, brush=line_color+'10')
+        # line_color = '#F4D03F'
+        # self.plots['cvd'] = fplt.plot(self.cvd, ax=ax2, legend='CVD', color=line_color, fillLevel=0, brush=line_color+'10')
         # and set background
-        vb = self.plots['cvd'].getViewBox()
-        vb.setBackgroundColor('#00000000')
+        # vb = self.plots['cvd'].getViewBox()
+        # vb.setBackgroundColor('#00000000')
 
         # ==============================================================================================
         # plot stoch RSI
-        self.plots['stochrsi_fastk'] = fplt.plot(self.ohlcv['fastk'], ax=ax4, legend=f'StochRSI Fast k: {self.stoch_rsi[1]} Timeperiod: {self.stoch_rsi[0]}')
-        self.plots['stochrsi_fastd'] = fplt.plot(self.ohlcv['fastd'], ax=ax4, legend=f'StochRSI Fast d: {self.stoch_rsi[2]} Timeperiod: {self.stoch_rsi[0]}')
+        # self.plots['stochrsi_fastk'] = fplt.plot(self.ohlcv['fastk'], ax=ax4, legend=f'StochRSI Fast k: {self.stoch_rsi[1]} Timeperiod: {self.stoch_rsi[0]}')
+        # self.plots['stochrsi_fastd'] = fplt.plot(self.ohlcv['fastd'], ax=ax4, legend=f'StochRSI Fast d: {self.stoch_rsi[2]} Timeperiod: {self.stoch_rsi[0]}')
 
-        thresholds = [20, 80]
-        for th in thresholds:
-            rsi_threshold_line = pg.InfiniteLine(pos=th, angle=0, pen=fplt._makepen(color='#ffffff50', style='- - '))
-            ax4.addItem(rsi_threshold_line, ignoreBounds=True)
-        fplt.add_band(*thresholds, color='#2980B920', ax=ax4)
+        # thresholds = [20, 80]
+        # for th in thresholds:
+        #     rsi_threshold_line = pg.InfiniteLine(pos=th, angle=0, pen=fplt._makepen(color='#ffffff50', style='- - '))
+        #     ax4.addItem(rsi_threshold_line, ignoreBounds=True)
+        # fplt.add_band(*thresholds, color='#2980B920', ax=ax4)
 
-        vb = self.plots['stochrsi_fastk'].getViewBox()
-        vb.setBackgroundColor('#00000020')
+        # vb = self.plots['stochrsi_fastk'].getViewBox()
+        # vb.setBackgroundColor('#00000020')
 
         # ==============================================================================================
         '''
@@ -261,13 +264,13 @@ class OrderflowPlotter:
 
         # set gridlines
         ax.showGrid(x=True, y=True, alpha=0.2)
-        ax2.showGrid(x=True, y=True, alpha=0.1)
-        ax3.showGrid(x=True, y=True, alpha=0.1)
-        ax4.showGrid(x=True, y=True, alpha=0.1)
+        # ax2.showGrid(x=True, y=True, alpha=0.1)
+        # ax3.showGrid(x=True, y=True, alpha=0.1)
+        # ax4.showGrid(x=True, y=True, alpha=0.1)
         ax5.showGrid(x=True, y=False, alpha=0.1)
 
         # add YAxis item at the right
-        # ax.axes['right'] = {'item': fplt.YAxisItem(vb=ax.vb, orientation='right')}
+        ax.axes['right'] = {'item': fplt.YAxisItem(vb=ax.vb, orientation='right')}
         # ax2.axes['right'] = {'item': fplt.YAxisItem(vb=ax2.vb, orientation='right')}
 
         # add legend of ohlcv data
@@ -295,14 +298,14 @@ class OrderflowPlotter:
             bapr = mp.bidask_profile.copy()
             y_increment = self.increment / 2
             if y > mp.price_levels_range[0] + y_increment  or y < mp.price_levels_range[1] - y_increment:
-                add_yt = f'\tLevel: {ytext}' # not showing orderflow info if cursor is outside range
+                add_yt = f'\tLevel1: {ytext}' # not showing orderflow info if cursor is outside range
             else:
                 bapr.index = bapr.index - y_increment #
                 plr = bapr[bapr.index <= y].iloc[-1] # the price level row
                 pl = round(plr.name + y_increment, 8) # the original price level
                 dpr = mp.delta_profile
                 a, b, d = plr['a'], plr['b'], dpr.loc[pl].values[0]
-                add_yt = f'\tLevel: {ytext}\n\n\tAsk: {a}\n\tBid: {b}\n\tDelta: {d}' # not showing ask and bid value if cursor is outside range
+                add_yt = f'\tLevel2: {ytext}\n\n\tAsk: {a}\n\tBid: {b}\n\tDelta: {d}' # not showing ask and bid value if cursor is outside range
             add_xt = f'\t{xtext}'
             return add_xt, add_yt
 
